@@ -32,7 +32,7 @@ def get_all_songs() -> list[Song]:
     for s in songs_list_rough:
         if s.endswith(".md"):
             continue
-        
+
         data = s.split('] - [')
 
         data[0] = data[0].removeprefix('[')
@@ -110,7 +110,6 @@ def search_songs(songs_list: list[Song], search_val: str, search_params: str) ->
                 res.append(s)
 
     return res
-
 
 def sort_songs(songs_list: list[Song], sort_params: str, order: str) -> list[Song]:
     if order == 'asc':
