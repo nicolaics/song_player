@@ -67,8 +67,8 @@ def play_from_queue(song_q: list[SongQueue]):
             break
 
 def add_to_queue(song: Song, song_queue: list) -> list:
-    new_song_queue = song_queue.append(SongQueue(song))
-    return new_song_queue
+    song_queue.append(SongQueue(song))
+    return song_queue
 
 def play_next(song: Song, song_q: list) -> list:
     new_song_queue = song_q
