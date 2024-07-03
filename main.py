@@ -7,11 +7,12 @@ import playlist
 
 import pickle
 
-# songs_list = songs.get_all_songs()
+global song_q
 song_q = []
 
 def load_queue():
     q_path = "./playlists/QUEUE.bin"
+    global song_q
 
     try:
         fh = open(q_path, 'rb')
@@ -27,6 +28,8 @@ def load_queue():
         return
 
 def select_one_song(songs_list: list[Song]):
+    global song_q
+
     song_no = int(input("Which song do you want to select (number only)? "))
     song_no -= 1
 
@@ -72,6 +75,7 @@ def select_one_song(songs_list: list[Song]):
         sleep_timer.close_app(song_q)
 
 def song_selection(songs_list: list[Song]):
+    print()
     songs.show_all_songs(songs_list)
 
     print()
@@ -84,6 +88,7 @@ def song_selection(songs_list: list[Song]):
     print("6. Sort Song by Album Ascending")
     print("7. Sort Song by Album Descending")
     print("8. Sort Song by File Type")
+    print("9. Previous")
     print("0. Exit")
 
     choose = int(input("Your selection (number only): "))
@@ -92,33 +97,30 @@ def song_selection(songs_list: list[Song]):
         select_one_song(songs_list)
     elif choose == 2:
         songs_list = songs.sort_songs(songs_list, "title", 'asc')
-        song_selection(songs_list)
     elif choose == 3:
         songs_list = songs.sort_songs(songs_list, "title", 'desc')
-        song_selection(songs_list)
     elif choose == 4:
         songs_list = songs.sort_songs(songs_list, "artist", 'asc')
-        song_selection(songs_list)
     elif choose == 5:
         songs_list = songs.sort_songs(songs_list, "artist", 'desc')
-        song_selection(songs_list)
     elif choose == 6:
         songs_list = songs.sort_songs(songs_list, "album", 'asc')
-        song_selection(songs_list)
     elif choose == 7:
         songs_list = songs.sort_songs(songs_list, "album", 'desc')
-        song_selection(songs_list)
     elif choose == 8:
         songs_list = songs.sort_songs(songs_list, "type", 'asc')
-        song_selection(songs_list)
+    elif choose == 9:
+        print()
+        return
     elif choose == 0:
         sleep_timer.close_app(song_q)
+        return
+
+    song_selection(songs_list)
 
 def main():
+    global song_q
     load_queue()
-    # while True:
-    # sleep_timer.set_timer(0, None)
-    # playlist.add_to_playlist("Test", songs_list[0])
 
     while True:
         songs_list = songs.get_all_songs()
@@ -126,7 +128,9 @@ def main():
         print("1. Show All Songs")
         print("2. Search for a Song")
         print("3. Play from Queue")
-        print("4. View Playlist")
+        print("4. View Queue")
+        print("5. View Playlist")
+        print("6. Set Sleep Timer")
         print("0. Exit")
 
         choose = int(input("Selection (number only): ").strip())
@@ -145,6 +149,8 @@ def main():
         elif choose == 3:
             player.play_from_queue(song_q)
         elif choose == 4:
+            playlist.view_songs_in_a_playlist("QUEUE")
+        elif choose == 5:
             playlists_list = playlist.view_all_playlists()
 
             print()
@@ -156,16 +162,23 @@ def main():
             playlist_choose = int(input("Your Choice (number only): "))
 
             if playlist_choose != 0:
-                playlist_no = input("Input Playlist No.: ")
+                playlist_no = int(input("Input Playlist No.: "))
+                playlist_no -= 1
 
                 if playlist_choose == 1:
-                    p_name = playlist.find_playlist_name(playlists_list, playlist_no)
-                    playlist.view_songs_in_a_playlist(p_name)
+                    playlist.view_songs_in_a_playlist(playlists_list[playlist_no])
+                elif playlist_choose == 2:
+                    playlist.delete_playlist(playlists_list[playlist_no])
             else:
                 sleep_timer.close_app(song_q)
+        elif choose == 6:
+            timer = input("Enter the time (hh:mm:ss): " )
+            sleep_timer.set_timer(timer, song_q)
         elif choose == 0:
-            sleep_timer.close_app(song_q)        
+            sleep_timer.close_app(song_q)
 
+
+        song_selection(songs_list)
 
 if __name__ == "__main__":
     main()
