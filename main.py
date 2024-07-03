@@ -163,7 +163,9 @@ def main():
     while True:
         songs_list = songs.get_all_songs()
 
-        print()
+        print("\n----------------------")
+        print("*** MAIN MENU ***")
+        print("----------------------")
         print("1. Show All Songs")
         print("2. Search for a Song")
         print("3. View Queue")
@@ -182,6 +184,9 @@ def main():
             continue
         elif choose == 4:
             player.play_from_queue(song_q)
+            continue
+        elif choose == 5:
+            player.clear_queue()
             continue
         elif choose == 6:
             playlist_opt()

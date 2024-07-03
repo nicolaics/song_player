@@ -88,5 +88,15 @@ def save_queue(song_q: list):
 
     fh.close()
 
+def clear_queue() -> list:
+    if os.path.exists(P_PATH):
+        os.remove(P_PATH)
+    
+    save_queue([])
+
+    print("Queue is emptied!")
+    
+    return []
+
 if __name__ == "__main__":
     play_single_song(Song("Keep It", "LiQWYD", "Unknown", None, None))
