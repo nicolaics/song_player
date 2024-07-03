@@ -103,11 +103,12 @@ def view_songs_in_a_playlist(p_name: str):
         
     fh.close()
 
-    print(f"PLAYLIST: {p_name}")
+    print()
+    print(f"Playlist: {p_name}")
 
     if p_name == 'QUEUE':
         temp = []
-        for i in songs_list:
+        for i in songs_list[0]:
             temp.append(i.song)
 
         songs_list = temp
