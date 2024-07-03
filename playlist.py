@@ -67,8 +67,24 @@ def view_all_playlists() -> list[str]:
     
     playlists_list = os.listdir(f_path)
 
-    # TODO: print the playlists with number
-    print()
+    header_len = {
+        "no": 7,
+        "p_name": 32,
+    }
+
+    print("+" + ("-" * header_len['no']), end='')
+    print("+" + ("-" * header_len['p_name']), end='')
+    print("+")
+
+    count = 1
+
+    for i in playlists_list:
+        print(f"| {count:5s} | {i:30s} |")
+        count += 1
+
+    print("+" + ("-" * header_len['no']), end='')
+    print("+" + ("-" * header_len['p_name']), end='')
+    print("+")
 
     return playlists_list   
 
@@ -88,6 +104,14 @@ def view_songs_in_a_playlist(p_name: str):
     fh.close()
 
     print(f"PLAYLIST: {p_name}")
+
+    if p_name == 'QUEUE':
+        temp = []
+        for i in songs_list:
+            temp.append(i.song)
+
+        songs_list = temp
+        
     show_all_songs(songs_list)
 
 def find_playlist_name(playlists_list: list, p_name: str) -> str:
@@ -105,3 +129,8 @@ def find_playlist_name(playlists_list: list, p_name: str) -> str:
                 break
 
     return p_name
+
+def delete_playlist(p_name: str):
+    p_name = FOLDER_PATH + p_name + '.bin'
+
+    os.remove(p_name)
