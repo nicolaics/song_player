@@ -7,7 +7,7 @@ class Song:
         self.file_type = file_type
 
 class SongQueue:
-    def __init__(self, song: Song) -> None:
+    def __init__(self, song: Song, is_playing=False) -> None:
         self.song = song
-        self.is_playing = False
+        self.is_playing = is_playing
     
