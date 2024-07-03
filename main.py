@@ -39,9 +39,8 @@ def select_one_song(songs_list: list[Song]):
     print("1. Play Song")
     print("2. Add to Queue")
     print("3. Add to Play Next")
-    print("4. Play from Queue")
-    print("5. Add to Playlist")
-    print("6. Previous")
+    print("4. Add to Playlist")
+    print("5. Previous")
     print("0. Exit")
 
     song_select_choose = int(input("Your choice (number only): "))
@@ -53,17 +52,17 @@ def select_one_song(songs_list: list[Song]):
     elif song_select_choose == 3:
         song_q = player.play_next(songs_list[song_no], song_q)
     elif song_select_choose == 4:
-        player.play_from_queue(song_q)
-    elif song_select_choose == 5:
         playlists_list = playlist.view_all_playlists()
         
         p_name = input("Playlist Name (Enter number/Playlist Name): ")
         p_name = playlist.find_playlist_name(playlists_list, p_name)
+
+        print(p_name)
         
         playlist.add_to_playlist(p_name, songs_list[song_no])
 
         print(f"Successfully added to {p_name}!")
-    elif song_select_choose == 6:
+    elif song_select_choose == 5:
         return
     elif song_select_choose == 0:
         sleep_timer.close_app(song_q)
@@ -89,6 +88,7 @@ def song_selected(songs_list: list[Song]):
 
     if choose == 1:
         select_one_song(songs_list)
+        return
     elif choose == 2:
         songs_list = songs.sort_songs(songs_list, "title", 'asc')
     elif choose == 3:
@@ -180,13 +180,13 @@ def main():
         if choose == 2:
             songs_list = sort_selected(songs_list)
         elif choose == 3:
-            playlist.view_songs_in_a_playlist("QUEUE.bin")
+            playlist.view_songs_in_a_playlist("QUEUE")
             continue
         elif choose == 4:
             player.play_from_queue(song_q)
             continue
         elif choose == 5:
-            player.clear_queue()
+            song_q = player.clear_queue()
             continue
         elif choose == 6:
             playlist_opt()
