@@ -29,21 +29,42 @@ def play_single_song(song: Song):
     play_audio = multiprocessing.Process(target=playsound, args=((S_PATH + song_path),))
     play_audio.start()
     
-    # TODO: to terminate give commands
-    input("E")
+    print("1. Next")
+    print("2. Previous")
+    print("3. Stop")
+    choose = int(input("Your choice (number only): "))
     
     play_audio.terminate()
-    
 
+    if choose == 2:
+        return 'prev'
+    elif choose == 3:
+        return 'stop'
+    
+    return None
+    
 def play_from_queue(song_q: list[SongQueue]):
     if len(song_q) == 0:
         print("Queue is empty!")
         return
     
-    for s in song_q:
-        s.is_playing = True
-        play_single_song(s.song)
-        s.is_playing = False
+    i = 0
+
+    while True:
+        song_q[i].is_playing = True
+        cue = play_single_song(song_q[i].song)
+        song_q[i].is_playing = False
+
+        if cue == 'prev':
+            i -= 2
+        elif cue == 'stop':
+            song_q[i].is_playing = True
+            break
+
+        i += 1
+
+        if i == len(song_q):
+            break
 
 def add_to_queue(song: Song, song_queue: list) -> list:
     new_song_queue = song_queue.append(SongQueue(song))
