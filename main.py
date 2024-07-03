@@ -16,13 +16,7 @@ def load_queue():
 
     try:
         fh = open(q_path, 'rb')
-
-        while True:
-            try:
-                song_q.append(pickle.load(fh))
-            except EOFError:
-                break
-
+        song_q = pickle.load(fh)
         fh.close()
     except:
         return
@@ -125,10 +119,11 @@ def main():
     while True:
         songs_list = songs.get_all_songs()
 
+        print()
         print("1. Show All Songs")
         print("2. Search for a Song")
-        print("3. Play from Queue")
-        print("4. View Queue")
+        print("3. View Queue")
+        print("4. Play from Queue")
         print("5. View Playlist")
         print("6. Set Sleep Timer")
         print("0. Exit")
@@ -147,9 +142,11 @@ def main():
 
             songs_list = songs.search_songs(songs_list, search_val, search_params)
         elif choose == 3:
-            player.play_from_queue(song_q)
-        elif choose == 4:
             playlist.view_songs_in_a_playlist("QUEUE")
+            continue
+        elif choose == 4:
+            player.play_from_queue(song_q)
+            continue
         elif choose == 5:
             playlists_list = playlist.view_all_playlists()
 
