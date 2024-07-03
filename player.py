@@ -11,6 +11,7 @@ S_PATH = "./songs/"
 def play_single_song(song: Song):
     songs_list = os.listdir(S_PATH)
     song_path = ""
+    s_title = ""
 
     for s in songs_list:
         print(s)
@@ -18,13 +19,13 @@ def play_single_song(song: Song):
 
         title = data[0].removeprefix('[')
 
-        print(title)
-
         if title.lower() == song.title.lower():
             song_path = s
+            s_title = title
             break
 
-    print(S_PATH + song_path)
+    print(f"Now Playing: {s_title}")
+    print()
     
     play_audio = multiprocessing.Process(target=playsound, args=((S_PATH + song_path),))
     play_audio.start()
