@@ -21,21 +21,6 @@ def add_to_playlist(p_name: str, song: Song):
         create_playlist(p_name, [song])
     else:
         fh = open(playlist_fname, '+rb')
-        # songs_list = []
-        
-        # while True:
-        #     try:
-        #         songs_list.append(pickle.load(fh))
-        #     except EOFError:
-        #         break
-
-        # for s in songs_list:
-        #     if s.title == song.title:
-        #         if s.artist == song.artist:
-        #             if s.album == song.album:
-        #                 dup = int(input)
-
-        # songs_list.append(song)
 
         pickle.dump(song, fh)
         
@@ -105,7 +90,7 @@ def view_all_playlists() -> list[str]:
 
     return playlists_list   
 
-def view_songs_in_a_playlist(p_name: str):
+def view_songs_in_a_playlist(p_name: str) -> list[Song]:
     p_fname = FOLDER_PATH + p_name + ".bin"
 
     try:
@@ -135,6 +120,8 @@ def view_songs_in_a_playlist(p_name: str):
         songs_list = temp
         
     show_all_songs(songs_list)
+
+    return songs_list
 
 def find_playlist_name(playlists_list: list, p_name: str) -> str:
     p_no = None
