@@ -49,8 +49,10 @@ def select_one_song(songs_list: list[Song]):
         player.play_single_song(songs_list[song_no])
     elif song_select_choose == 2:
         song_q = player.add_to_queue(songs_list[song_no], song_q)
+        print("Successfully added to Queue!")
     elif song_select_choose == 3:
         song_q = player.play_next(songs_list[song_no], song_q)
+        print("Successfully added to Play Next!")
     elif song_select_choose == 4:
         playlists_list = playlist.view_all_playlists()
         
@@ -63,7 +65,7 @@ def select_one_song(songs_list: list[Song]):
 
         print(f"Successfully added to {p_name}!")
     elif song_select_choose == 5:
-        return
+        return song_select_choose
     elif song_select_choose == 0:
         sleep_timer.close_app(song_q)
 
@@ -87,8 +89,8 @@ def song_selected(songs_list: list[Song]):
     choose = int(input("Your selection (number only): "))
 
     if choose == 1:
-        select_one_song(songs_list)
-        return
+        if select_one_song(songs_list) != 5:
+            return
     elif choose == 2:
         songs_list = songs.sort_songs(songs_list, "title", 'asc')
     elif choose == 3:
@@ -150,9 +152,33 @@ def playlist_opt():
         playlist_no -= 1
 
         if playlist_choose == 1:
-            playlist.view_songs_in_a_playlist(playlists_list[playlist_no])
+            temp = playlist.view_songs_in_a_playlist(playlists_list[playlist_no])
+
+            songs_in_playlist = []
+
+            for i in range(len(temp)):
+                if i == 0:
+                    songs_in_playlist.append(SongQueue(temp[i], True))
+                    continue
+                
+                songs_in_playlist.append(SongQueue(temp[i]))
+
+            print()
+            print("1. Play Playlist")
+            print("2. Previous")
+            print("3. Exit")
+
+            play_p = int(input("Your selection (number only): "))
+
+            if play_p == 1:
+                player.play_from_queue(songs_in_playlist)
+            elif play_p == 2:
+                playlist_opt()
+            elif play_p == 3:
+                sleep_timer.close_app(song_q)
         elif playlist_choose == 2:
             playlist.delete_playlist(playlists_list[playlist_no])
+            print(f"Successfully delete {playlists_list[playlist_no]}!")
     else:
         sleep_timer.close_app(song_q)
 
@@ -190,6 +216,7 @@ def main():
             continue
         elif choose == 6:
             playlist_opt()
+            continue
         elif choose == 7:
             timer = input("Enter the time (hh:mm:ss): " )
             sleep_timer.set_timer(timer, song_q)
