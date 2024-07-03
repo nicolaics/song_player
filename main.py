@@ -64,11 +64,11 @@ def select_one_song(songs_list: list[Song]):
 
         print(f"Successfully added to {p_name}!")
     elif song_select_choose == 6:
-        song_selection(songs_list)
+        return
     elif song_select_choose == 0:
         sleep_timer.close_app(song_q)
 
-def song_selection(songs_list: list[Song]):
+def song_selected(songs_list: list[Song]):
     print()
     songs.show_all_songs(songs_list)
 
@@ -110,7 +110,51 @@ def song_selection(songs_list: list[Song]):
         sleep_timer.close_app(song_q)
         return
 
-    song_selection(songs_list)
+    song_selected(songs_list)
+
+def sort_selected(songs_list: list) -> list:
+    print()
+    print("Search Parameters:")
+    print("1. Title")
+    print("2. Artist")
+    print("3. Album")
+    print("4. Previous")
+
+    search_params = int(input("Search by (number only): ").strip())
+
+    if search_params == 4:
+        return None
+
+    search_val = input("Search: ")
+
+    return songs.search_songs(songs_list, search_val, search_params)
+
+def playlist_opt():
+    global song_q
+
+    playlists_list = playlist.view_all_playlists()
+
+    print()
+    print("What do you want to do?")
+    print("1. View Songs in a Playlist")
+    print("2. Delete a Playlist")
+    print("3. Previous")
+    print("0. Exit")
+
+    playlist_choose = int(input("Your Choice (number only): "))
+
+    if playlist_choose == 3:
+        return None
+    elif playlist_choose != 0:
+        playlist_no = int(input("Input Playlist No.: "))
+        playlist_no -= 1
+
+        if playlist_choose == 1:
+            playlist.view_songs_in_a_playlist(playlists_list[playlist_no])
+        elif playlist_choose == 2:
+            playlist.delete_playlist(playlists_list[playlist_no])
+    else:
+        sleep_timer.close_app(song_q)
 
 def main():
     global song_q
@@ -124,58 +168,34 @@ def main():
         print("2. Search for a Song")
         print("3. View Queue")
         print("4. Play from Queue")
-        print("5. View Playlist")
-        print("6. Set Sleep Timer")
+        print("5. Clear Queue")
+        print("6. View Playlist")
+        print("7. Set Sleep Timer")
         print("0. Exit")
 
         choose = int(input("Selection (number only): ").strip())
 
         if choose == 2:
-            print()
-            print("Search Parameters:")
-            print("1. Title")
-            print("2. Artist")
-            print("3. Album")
-
-            search_params = int(input("Search by (number only): ").strip())
-            search_val = input("Search: ")
-
-            songs_list = songs.search_songs(songs_list, search_val, search_params)
+            songs_list = sort_selected(songs_list)
         elif choose == 3:
-            playlist.view_songs_in_a_playlist("QUEUE")
+            playlist.view_songs_in_a_playlist("QUEUE.bin")
             continue
         elif choose == 4:
             player.play_from_queue(song_q)
             continue
-        elif choose == 5:
-            playlists_list = playlist.view_all_playlists()
-
-            print()
-            print("What do you want to do?")
-            print("1. View Songs in a Playlist")
-            print("2. Delete a Playlist")
-            print("0. Exit")
-
-            playlist_choose = int(input("Your Choice (number only): "))
-
-            if playlist_choose != 0:
-                playlist_no = int(input("Input Playlist No.: "))
-                playlist_no -= 1
-
-                if playlist_choose == 1:
-                    playlist.view_songs_in_a_playlist(playlists_list[playlist_no])
-                elif playlist_choose == 2:
-                    playlist.delete_playlist(playlists_list[playlist_no])
-            else:
-                sleep_timer.close_app(song_q)
         elif choose == 6:
+            playlist_opt()
+        elif choose == 7:
             timer = input("Enter the time (hh:mm:ss): " )
             sleep_timer.set_timer(timer, song_q)
+            continue
         elif choose == 0:
             sleep_timer.close_app(song_q)
 
+        if songs_list is None:
+            continue
 
-        song_selection(songs_list)
+        song_selected(songs_list)
 
 if __name__ == "__main__":
     main()
