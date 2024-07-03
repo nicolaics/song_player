@@ -4,8 +4,6 @@ import threading
 import player
 
 def close_app(song_q: list):
-    # print("After 5 secs")
-
     player.save_queue(song_q)
 
     os._exit(0)

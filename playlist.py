@@ -62,14 +62,15 @@ def sort_playlist(p_name: str, sort_params: str, sort_order: str) -> list[Song]:
     
     return songs_list
 
-def view_all_playlists():
+def view_all_playlists() -> list[str]:
     f_path = './playlists'
     
     playlists_list = os.listdir(f_path)
 
-    # TODO: print the playlists
+    # TODO: print the playlists with number
     print()
-    
+
+    return playlists_list   
 
 def view_songs_in_a_playlist(p_name: str):
     p_fname = FOLDER_PATH + p_name + ".bin"
@@ -88,3 +89,19 @@ def view_songs_in_a_playlist(p_name: str):
 
     print(f"PLAYLIST: {p_name}")
     show_all_songs(songs_list)
+
+def find_playlist_name(playlists_list: list, p_name: str) -> str:
+    p_no = None
+
+    try:
+        p_no = int(p_name)
+    except:
+        pass
+
+    if p_no is not None:
+        for i in range(len(playlists_list)):
+            if i == p_no:
+                p_name = playlists_list[i]
+                break
+
+    return p_name
