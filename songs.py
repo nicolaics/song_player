@@ -30,6 +30,9 @@ def get_all_songs() -> list[Song]:
     songs_list = []    
 
     for s in songs_list_rough:
+        if s.endswith(".md"):
+            continue
+        
         data = s.split('] - [')
 
         data[0] = data[0].removeprefix('[')
