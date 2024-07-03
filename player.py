@@ -43,11 +43,14 @@ def play_single_song(song: Song):
     
     return None
     
-def play_from_queue(song_q: list[SongQueue]):
+def play_from_queue(song_q: list[SongQueue], p_name: str):
     if len(song_q) == 0:
-        print("Queue is empty!")
+        print("Queue/Playlist is empty!")
         return
     
+    print()
+    print(f"Playing from {p_name}")
+
     idx = 0
 
     for i in range(len(song_q)):

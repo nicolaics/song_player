@@ -171,7 +171,7 @@ def playlist_opt():
             play_p = int(input("Your selection (number only): "))
 
             if play_p == 1:
-                player.play_from_queue(songs_in_playlist)
+                player.play_from_queue(songs_in_playlist, playlists_list[playlist_no])
             elif play_p == 2:
                 playlist_opt()
             elif play_p == 3:
@@ -209,7 +209,7 @@ def main():
             playlist.view_songs_in_a_playlist("QUEUE")
             continue
         elif choose == 4:
-            player.play_from_queue(song_q)
+            player.play_from_queue(song_q, "Queue")
             continue
         elif choose == 5:
             song_q = player.clear_queue()
