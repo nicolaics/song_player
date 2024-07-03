@@ -48,27 +48,40 @@ def play_from_queue(song_q: list[SongQueue]):
         print("Queue is empty!")
         return
     
-    i = 0
+    idx = 0
+
+    for i in range(len(song_q)):
+        if song_q[i].is_playing == True:
+            idx = i
+            break
 
     while True:
-        song_q[i].is_playing = True
+        song_q[idx].is_playing = True
         cue = play_single_song(song_q[i].song)
-        song_q[i].is_playing = False
+        song_q[idx].is_playing = False
 
         if cue == 'prev':
-            i -= 2
+            idx -= 2
+
+            if idx < -1:
+                idx = -1
         elif cue == 'stop':
-            song_q[i].is_playing = True
+            song_q[idx].is_playing = True
             break
 
-        i += 1
+        idx += 1
 
-        if i == len(song_q):
+        if idx == len(song_q):
+            song_q[0].is_playing = True
             break
 
-def add_to_queue(song: Song, song_queue: list) -> list:
-    song_queue.append(SongQueue(song))
-    return song_queue
+def add_to_queue(song: Song, song_q: list) -> list:
+    if len(song_q) == 0:
+        song_q.append(SongQueue(song, True))    
+    else:
+        song_q.append(SongQueue(song))
+
+    return song_q
 
 def play_next(song: Song, song_q: list) -> list:
     new_song_queue = song_q
