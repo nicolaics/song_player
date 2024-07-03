@@ -87,7 +87,7 @@ def view_all_playlists() -> list[str]:
         if (i.endswith(".md")) or (i == "QUEUE.bin"):
             continue
             
-        playlists_list.append(i)
+        playlists_list.append(i.split('.')[0])
 
     count = 1 
 
@@ -106,7 +106,7 @@ def view_all_playlists() -> list[str]:
     return playlists_list   
 
 def view_songs_in_a_playlist(p_name: str):
-    p_fname = FOLDER_PATH + p_name
+    p_fname = FOLDER_PATH + p_name + ".bin"
 
     try:
         fh = open(p_fname, 'rb')
@@ -127,7 +127,7 @@ def view_songs_in_a_playlist(p_name: str):
     print()
     print(f"Playlist: {p_name.split('.')[0]}")
 
-    if p_name == 'QUEUE.bin':
+    if p_name == 'QUEUE':
         temp = []
         for i in songs_list[0]:
             temp.append(i.song)
@@ -141,6 +141,7 @@ def find_playlist_name(playlists_list: list, p_name: str) -> str:
 
     try:
         p_no = int(p_name)
+        p_no -= 1
     except:
         pass
 
@@ -150,7 +151,7 @@ def find_playlist_name(playlists_list: list, p_name: str) -> str:
                 p_name = playlists_list[i]
                 break
 
-    return p_name
+    return p_name.split('.')[0]
 
 def delete_playlist(p_name: str):
     p_name = FOLDER_PATH + p_name + '.bin'
