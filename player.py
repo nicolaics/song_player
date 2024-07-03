@@ -14,7 +14,6 @@ def play_single_song(song: Song):
     s_title = ""
 
     for s in songs_list:
-        print(s)
         data = s.split('] - [')
 
         title = data[0].removeprefix('[')
@@ -24,8 +23,8 @@ def play_single_song(song: Song):
             s_title = title
             break
 
-    print(f"Now Playing: {s_title}")
     print()
+    print(f"Now Playing: {s_title}")
     
     play_audio = multiprocessing.Process(target=playsound, args=((S_PATH + song_path),))
     play_audio.start()
