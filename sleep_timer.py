@@ -4,6 +4,8 @@ import threading
 import player
 
 def close_app(song_q: list):
+    print("\n\nCLOSING APP!")
+
     player.save_queue(song_q)
     os._exit(0)
 
@@ -20,4 +22,4 @@ def set_timer(t: str, song_q: list):
     timer = threading.Timer(t, function=close_app, args=(song_q,))
     timer.start()
 
-    print(f"Timer has been set for: {hrs}h {mins}m {secs}s!")
+    print("\nTimer has been set for: {0:02.0f}h {1:02.0f}m {2:02.0f}s!".format(hrs, mins, secs))
