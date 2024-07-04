@@ -114,7 +114,7 @@ def song_selected(songs_list: list[Song]):
 
     song_selected(songs_list)
 
-def sort_selected(songs_list: list) -> list:
+def search_selected(songs_list: list) -> list:
     print()
     print("Search Parameters:")
     print("1. Title")
@@ -204,7 +204,7 @@ def main():
         choose = int(input("Selection (number only): ").strip())
 
         if choose == 2:
-            songs_list = sort_selected(songs_list)
+            songs_list = search_selected(songs_list)
         elif choose == 3:
             playlist.view_songs_in_a_playlist("QUEUE")
             continue
