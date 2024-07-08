@@ -6,6 +6,9 @@ import pickle
 
 FOLDER_PATH = "./playlists/"
 
+'''
+    function to create a playlist
+'''
 def create_playlist(p_name: str, songs_list: list[Song]):
     fh = open(FOLDER_PATH + p_name + '.bin', 'wb')
 
@@ -14,6 +17,10 @@ def create_playlist(p_name: str, songs_list: list[Song]):
     
     fh.close
 
+'''
+    function to add a song into a playlist, if the playlist doesn’t exist,
+    create a new one
+'''
 def add_to_playlist(p_name: str, song: Song):
     playlist_fname = FOLDER_PATH + p_name + ".bin"
 
@@ -22,10 +29,24 @@ def add_to_playlist(p_name: str, song: Song):
     else:
         fh = open(playlist_fname, '+rb')
 
-        pickle.dump(song, fh)
+        songs_list = []
+        
+        while True:
+            try:
+                songs_list.append(pickle.load(fh))
+            except EOFError:
+                break
         
         fh.close()
 
+        songs_list.append(song)
+
+        create_playlist(p_name, songs_list)
+        
+        
+'''
+    function to sort the songs inside a playlist
+'''
 def sort_playlist(p_name: str, sort_params: str, sort_order: str) -> list[Song]:
     p_fname = FOLDER_PATH + p_name + ".bin"
 
@@ -47,6 +68,9 @@ def sort_playlist(p_name: str, sort_params: str, sort_order: str) -> list[Song]:
     
     return songs_list
 
+'''
+    function to show all of the playlists exist in the playlists folder
+'''
 def view_all_playlists() -> list[str]:
     f_path = './playlists'
     
@@ -81,6 +105,9 @@ def view_all_playlists() -> list[str]:
         
         i = i.split(".")[0]
 
+        if len(i) > 30:
+            i = i[:27]
+
         print(f"| {c:5s} | {i:30s} |")
         count += 1
 
@@ -90,6 +117,9 @@ def view_all_playlists() -> list[str]:
 
     return playlists_list   
 
+'''
+   function to print all of the songs inside a playlist 
+'''
 def view_songs_in_a_playlist(p_name: str) -> list[Song]:
     p_fname = FOLDER_PATH + p_name + ".bin"
 
@@ -105,7 +135,7 @@ def view_songs_in_a_playlist(p_name: str) -> list[Song]:
         try:
             songs_list.append(pickle.load(fh))
         except EOFError:
-            break    
+            break
         
     fh.close()
 
@@ -123,6 +153,10 @@ def view_songs_in_a_playlist(p_name: str) -> list[Song]:
 
     return songs_list
 
+'''
+    additional function to find a playlist name when the user
+    enters a number instead of the playlist name
+'''
 def find_playlist_name(playlists_list: list, p_name: str) -> str:
     p_no = None
 
@@ -140,6 +174,9 @@ def find_playlist_name(playlists_list: list, p_name: str) -> str:
 
     return p_name.split('.')[0]
 
+'''
+    function to delete a playlist
+'''
 def delete_playlist(p_name: str):
     p_name = FOLDER_PATH + p_name + '.bin'
 

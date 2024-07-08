@@ -10,6 +10,9 @@ import pickle
 global song_q
 song_q = []
 
+'''
+    function to initialize the queue from the previous session
+'''
 def load_queue():
     q_path = "./playlists/QUEUE.bin"
     global song_q
@@ -21,6 +24,12 @@ def load_queue():
     except:
         return
 
+'''
+    if the user selected a song from the list
+
+    this function will show the options if the user select
+    a song, such as play song, add to queue, and etc
+'''
 def select_one_song(songs_list: list[Song]):
     global song_q
 
@@ -49,9 +58,11 @@ def select_one_song(songs_list: list[Song]):
         player.play_single_song(songs_list[song_no])
     elif song_select_choose == 2:
         song_q = player.add_to_queue(songs_list[song_no], song_q)
+        player.save_queue(song_q)
         print("Successfully added to Queue!")
     elif song_select_choose == 3:
         song_q = player.play_next(songs_list[song_no], song_q)
+        player.save_queue(song_q)
         print("Successfully added to Play Next!")
     elif song_select_choose == 4:
         playlists_list = playlist.view_all_playlists()
@@ -69,6 +80,9 @@ def select_one_song(songs_list: list[Song]):
     elif song_select_choose == 0:
         sleep_timer.close_app(song_q)
 
+'''
+    the function to show all of the options regarding songs
+'''
 def song_selected(songs_list: list[Song]):
     print()
     songs.show_all_songs(songs_list)
@@ -114,6 +128,9 @@ def song_selected(songs_list: list[Song]):
 
     song_selected(songs_list)
 
+'''
+    if the user wanted to search for a song
+'''
 def search_selected(songs_list: list) -> list:
     print()
     print("Search Parameters:")
@@ -124,13 +141,22 @@ def search_selected(songs_list: list) -> list:
 
     search_params = int(input("Search by (number only): ").strip())
 
-    if search_params == 4:
-        return None
+    if search_params == 1:
+        search_params = "title"
+    elif search_params == 2:
+        search_params = "artist"
+    elif search_params == 3:
+        search_params = "album"
+    elif search_params == 4:
+        return None 
 
-    search_val = input("Search: ")
+    search_val = input("Search value: ")
 
     return songs.search_songs(songs_list, search_val, search_params)
 
+'''
+    if the user chooses to view playlist
+'''
 def playlist_opt():
     global song_q
 

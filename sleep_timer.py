@@ -1,14 +1,25 @@
 import os
 import threading
+import multiprocessing
 
 import player
 
+'''
+    function to close the application and save the queue to the binary file
+'''
 def close_app(song_q: list):
     print("\n\nCLOSING APP!")
 
     player.save_queue(song_q)
+
+    for proc in multiprocessing.active_children():
+        proc.kill()
+
     os._exit(0)
 
+'''
+    function to set the sleep timer
+'''
 def set_timer(t: str, song_q: list):
     parse = t.split(":")
     hrs = float(parse[0])

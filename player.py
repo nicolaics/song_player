@@ -8,10 +8,34 @@ from playsound import playsound
 P_PATH = "./playlists/QUEUE.bin"
 S_PATH = "./songs/"
 
+'''
+    function to accept an input when a song is playing
+'''
+def accept_input(choice: multiprocessing.Queue): 
+    print("1. Next")
+    print("2. Previous")
+    print("3. Stop")
+    print("Your choice (number only): ")
+    
+    stdin = open(0)
+    choose = int(stdin.readline())
+
+    if choose == 2:
+        choice.put('prev')
+    elif choose == 3:
+        choice.put('stop')
+    else:
+        choice.put(None)
+
+'''
+    function to play a single song
+'''
 def play_single_song(song: Song):
     songs_list = os.listdir(S_PATH)
     song_path = ""
     s_title = ""
+
+    choice = multiprocessing.Queue()
 
     for s in songs_list:
         data = s.split('] - [')
@@ -27,22 +51,31 @@ def play_single_song(song: Song):
     print(f"Now Playing: {s_title}")
     
     play_audio = multiprocessing.Process(target=playsound, args=((S_PATH + song_path),))
-    play_audio.start()
-    
-    print("1. Next")
-    print("2. Previous")
-    print("3. Stop")
-    choose = int(input("Your choice (number only): "))
-    
-    play_audio.terminate()
+    accept_choice = multiprocessing.Process(target=accept_input, args=(choice,))
 
-    if choose == 2:
-        return 'prev'
-    elif choose == 3:
-        return 'stop'
+    play_audio.start()
+    accept_choice.start()
     
-    return None
+    while play_audio.is_alive():
+        # if the audio has finished playing
+        if play_audio.is_alive() is False:
+            # stop accepting user input
+            accept_choice.kill()
+        
+        # if the user has input something
+        if accept_choice.is_alive() is False:
+            # stop playing
+            play_audio.terminate()
+            break
     
+    accept_choice.join()
+    play_audio.join()
+    
+    return choice.get()
+
+'''
+    function to play from a queue or playlist
+'''
 def play_from_queue(song_q: list[SongQueue], p_name: str):
     if len(song_q) == 0:
         print("Queue/Playlist is empty!")
@@ -57,10 +90,11 @@ def play_from_queue(song_q: list[SongQueue], p_name: str):
         if song_q[i].is_playing == True:
             idx = i
             break
-
+    
+    # keep playing from the queue
     while True:
         song_q[idx].is_playing = True
-        cue = play_single_song(song_q[i].song)
+        cue = play_single_song(song_q[idx].song)
         song_q[idx].is_playing = False
 
         if cue == 'prev':
@@ -78,6 +112,9 @@ def play_from_queue(song_q: list[SongQueue], p_name: str):
             song_q[0].is_playing = True
             break
 
+'''
+    function to add songs to queue
+'''
 def add_to_queue(song: Song, song_q: list) -> list:
     if len(song_q) == 0:
         song_q.append(SongQueue(song, True))    
@@ -86,6 +123,9 @@ def add_to_queue(song: Song, song_q: list) -> list:
 
     return song_q
 
+'''
+    function to add songs to the next play in the queue
+'''
 def play_next(song: Song, song_q: list) -> list:
     new_song_queue = song_q
 
@@ -97,6 +137,9 @@ def play_next(song: Song, song_q: list) -> list:
 
     return new_song_queue
 
+'''
+    function to save the queue to the file
+'''
 def save_queue(song_q: list):
     fh = open(P_PATH, 'wb')
 
@@ -104,6 +147,9 @@ def save_queue(song_q: list):
 
     fh.close()
 
+'''
+    function to empty or clear the queue
+'''
 def clear_queue() -> list:
     if os.path.exists(P_PATH):
         os.remove(P_PATH)
@@ -115,4 +161,9 @@ def clear_queue() -> list:
     return []
 
 if __name__ == "__main__":
-    play_single_song(Song("Keep It", "LiQWYD", "Unknown", None, None))
+    song_q = []
+
+    song_q.append(SongQueue(Song("I Stan U", "IU", "The Winning", None, None), is_playing=True))
+    song_q.append(SongQueue(Song("Shopper", "IU", "The Winning", None, None), is_playing=False))
+
+    play_from_queue(song_q, "QUEUE")

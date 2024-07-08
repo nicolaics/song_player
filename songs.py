@@ -12,8 +12,9 @@ from type import *
     If the Artist or Album is unknown, just write Unknown
 '''
 
-# function to convert the information into  
-# some readable format 
+'''
+    function to get the audio duration from the file
+'''
 def audio_duration(length): 
     length %= 3600
     mins = length // 60  # calculate in minutes 
@@ -22,6 +23,9 @@ def audio_duration(length):
   
     return mins, seconds  # returns the duration
 
+'''
+    function to get all of the songs inside the songs folder
+'''
 def get_all_songs() -> list[Song]:
     f_path = './songs'
     
@@ -56,6 +60,9 @@ def get_all_songs() -> list[Song]:
 
     return songs_list
 
+'''
+    function to only print the border for displaying the songs information
+'''
 def print_border():
     header_len = {
         "no": 7,
@@ -74,10 +81,27 @@ def print_border():
     print("+" + ("-" * header_len['type']), end='')
     print("+")
 
+'''
+    function to show all of the songs’ information in the form of table
+'''
 def print_data(no: str, title: str, artist: str,
                album: str, dur: str, type: str):
+    
+    if len(title) > 30:
+        title = title[:27]
+    
+    if len(artist) > 20:
+        artist = artist[:17]
+
+    if len(album) > 20:
+        album = album[:17]
+
     print(f"| {no:5s} | {title:30s} | {artist:20s} | {album:20s} | {dur:10s} | {type:5s} |")
 
+'''
+    the main function that shows all of the songs in the screen,
+    that incorporates print_data() and print_border() functions
+'''
 def show_all_songs(songs_list: list[Song]):
     print_border()
     print_data("No.", "Title", "Artist", "Album", "Duration", "Type")
@@ -91,6 +115,9 @@ def show_all_songs(songs_list: list[Song]):
 
     print_border()
 
+'''
+    function to search songs inside the folder, based on title, artist, or album
+'''
 def search_songs(songs_list: list[Song], search_val: str, search_params: str) -> list[Song]:
     res = []
 
@@ -111,20 +138,72 @@ def search_songs(songs_list: list[Song], search_val: str, search_params: str) ->
 
     return res
 
-def sort_songs(songs_list: list[Song], sort_params: str, order: str) -> list[Song]:
-    if order == 'asc':
-        reverse = False
-    else:
-        reverse = True
+'''
+    function to sort the displayed songs based on the title, artist, album,
+    or file type, in the order of ascending or descending
+'''
+def sort_songs(songs_list: list[Song], sort_params: str, order: str):
+    swapped = True
 
-    if sort_params == 'title':
-        songs_list.sort(key=lambda x: x.title, reverse=reverse)
-    elif sort_params == 'artist':
-        songs_list.sort(key=lambda x: x.artist, reverse=reverse)
-    elif sort_params == 'album':
-        songs_list.sort(key=lambda x: x.album, reverse=reverse)
-    elif sort_params == 'type':
-        songs_list.sort(key=lambda x: x.file_type, reverse=reverse)
+    if order == 'asc':
+        while swapped:
+            swapped = False
+
+            for i in range(1, len(songs_list)):
+                if sort_params == 'title':
+                    if songs_list[i - 1].title.lower() > songs_list[i].title.lower():
+                        temp = songs_list[i]
+                        songs_list[i] = songs_list[i - 1]
+                        songs_list[i - 1] = temp
+                        swapped = True
+                elif sort_params == 'artist':
+                    if songs_list[i - 1].artist.lower() > songs_list[i].artist.lower():
+                        temp = songs_list[i]
+                        songs_list[i] = songs_list[i - 1]
+                        songs_list[i - 1] = temp
+                        swapped = True
+                elif sort_params == 'album':
+                    if songs_list[i - 1].album.lower() > songs_list[i].album.lower():
+                        temp = songs_list[i]
+                        songs_list[i] = songs_list[i - 1]
+                        songs_list[i - 1] = temp
+                        swapped = True
+                elif sort_params == 'type':
+                    if songs_list[i - 1].file_type.lower() > songs_list[i].file_type.lower():
+                        temp = songs_list[i]
+                        songs_list[i] = songs_list[i - 1]
+                        songs_list[i - 1] = temp
+                        swapped = True
+    else:
+        while swapped:
+            swapped = False
+
+            for i in range(1, len(songs_list)):
+                if sort_params == 'title':
+                    if songs_list[i - 1].title.lower() < songs_list[i].title.lower():
+                        temp = songs_list[i]
+                        songs_list[i] = songs_list[i - 1]
+                        songs_list[i - 1] = temp
+                        swapped = True
+                elif sort_params == 'artist':
+                    if songs_list[i - 1].artist.lower() < songs_list[i].artist.lower():
+                        temp = songs_list[i]
+                        songs_list[i] = songs_list[i - 1]
+                        songs_list[i - 1] = temp
+                        swapped = True
+                elif sort_params == 'album':
+                    if songs_list[i - 1].album.lower() < songs_list[i].album.lower():
+                        temp = songs_list[i]
+                        songs_list[i] = songs_list[i - 1]
+                        songs_list[i - 1] = temp
+                        swapped = True
+                elif sort_params == 'type':
+                    if songs_list[i - 1].file_type.lower() < songs_list[i].file_type.lower():
+                        temp = songs_list[i]
+                        songs_list[i] = songs_list[i - 1]
+                        songs_list[i - 1] = temp
+                        swapped = True
+
 
     return songs_list
 
